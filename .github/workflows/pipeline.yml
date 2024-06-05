@@ -17,11 +17,13 @@ jobs:
         run: npm install
       - name: Check style
         run: npm run eslint
-      - name: Build
+      - name: Builds
         run : npm run build
       - name : Test
         run: npm run test
-      - name: e2e tests
+      - name : start the server
+        run: npm run start
+      - name: cypress e2e tests
         uses: cypress-io/github-action@v5
         with:
           command: npm run cypress:open
