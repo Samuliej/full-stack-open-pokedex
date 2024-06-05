@@ -10,8 +10,10 @@ app.get('/version', (req, res) => {
   res.send('3') // change this string to ensure a new version deployed
 })
 
+const breaking = true
+
 app.get('/health', (req, res) => {
-  if (true) throw('rikki')
+  if (breaking) throw('rikki')
   res.send('ok')
 })
 
