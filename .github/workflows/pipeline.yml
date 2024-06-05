@@ -28,3 +28,11 @@ jobs:
           command: npm run cypress:run
           start: npm run start-prod
           wait-on: http://localhost:5000
+      - name: Deploy the app to Fly.io
+        uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: print Fly.io logs
+        run: fly logs
