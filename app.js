@@ -10,10 +10,11 @@ app.get('/version', (req, res) => {
   res.send('3') // change this string to ensure a new version deployed
 })
 
-const breaking = true
 
 app.get('/health', (req, res) => {
-  if (breaking) throw('rikki')
+  // const breaking = true
+  // This here to test if we can break the app so it doesn't get updated
+  // if (breaking) throw('rikki')
   res.send('ok')
 })
 
