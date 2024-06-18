@@ -97,5 +97,5 @@ jobs:
             details: |
               Tag failed!
               By: ${{ github.actor }}
-              Commit: ${{ github.event.url }}
+              Commit: ${{ github.event.commits[0].url }}
             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
