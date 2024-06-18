@@ -23,6 +23,7 @@ jobs:
         run: npm run eslint
 
   simple_deployment_pipeline:
+    needs: [check_style]
     timeout-minutes: 10
     runs-on: ubuntu-20.04
     steps:
@@ -36,6 +37,12 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test
+
+      - name: github context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: cypress e2e tests
         uses: cypress-io/github-action@v5
         with:
@@ -54,6 +61,17 @@ jobs:
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: deployment failed
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+            severity: error
+            details: |
+              Deployment failed!
+              By: ${{ github.actor }}
+              Commit link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     needs: [simple_deployment_pipeline]
@@ -77,13 +95,13 @@ jobs:
           details: A new version of pokedex was succesfully deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-      - name: deployment and tag failed
+      - name: tag failed
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
             severity: error
             details: |
-              Deployment and tag failed by ${GITHUB_ACTOR}:
-              Commit message: ${{ toJson(github.event.commits.*.message) }}
-              Commit link: ${{ steps.construct_commit_links.outputs.commit_links }}
+              Tag failed!
+              By: ${{ github.actor }}
+              Commit link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
