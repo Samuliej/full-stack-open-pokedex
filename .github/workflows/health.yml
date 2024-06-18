@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - branch
+  schedule:
+    - cron: "*/5 * * * *"
 
 jobs:
   health_check:
@@ -19,5 +21,3 @@ jobs:
           max-attempts: 3
           retry-delay: 5s
           retry-all: false
-          cookie: "token=asdf1234"
-          basic-auth: "login:password"
