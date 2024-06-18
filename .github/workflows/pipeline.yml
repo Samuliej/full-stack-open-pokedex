@@ -61,10 +61,7 @@ jobs:
         if: failure()
         with:
             severity: error
-            details: |
-              Deployment failed by ${GITHUB_ACTOR}:
-              Commit message: ${{ toJson(github.event.commits.*.message) }}
-              Commit link: ${{ steps.construct_commit_links.outputs.commit_links }}
+            details: Deployement failed!
             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
