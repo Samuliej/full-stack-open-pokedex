@@ -6,7 +6,7 @@ on:
       - main
       - branch
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/1 * * * *"
 
 jobs:
   health_check:
