@@ -10,8 +10,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  simple_deployment_pipeline:
-    timeout-minutes: 10
+  check_style:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +21,18 @@ jobs:
         run: npm install
       - name: Check style
         run: npm run eslint
+
+  simple_deployment_pipeline:
+    needs: [check_style]
+    timeout-minutes: 10
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
       - name: Builds
         run: npm run build
       - name: Test
@@ -58,3 +69,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+
+      - name: deployment and tag succeeded
+        uses: rjstone/discord-webhook-notify@v1
+        if: ${{ success() }}
+        with:
+          severity: info
+          details: A new version of pokedex was succesfully deployed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: deployment and tag failed
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+            severity: error
+            details: |
+              Deployment and tag failed by ${GITHUB_ACTOR}:
+              Commit message: ${{ toJson(github.event.commits.*.message) }}
+              Commit link: ${{ steps.construct_commit_links.outputs.commit_links }}
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
