@@ -1,9 +1,6 @@
 const express = require('express')
 const app = express()
 
-// eslint-disable-next-line no-undef
-fdsafdsa
-
 // get the port from env variable
 const PORT = process.env.PORT || 5000
 
