@@ -70,7 +70,7 @@ jobs:
             details: |
               Deployment failed!
               By: ${{ github.actor }}
-              Commit: ${{ join(join(github.repositoryUrl, '/commit/'), github.sha) }}
+              Commit link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
@@ -103,5 +103,5 @@ jobs:
             details: |
               Tag failed!
               By: ${{ github.actor }}
-              Commit: ${{ join(join(github.repositoryUrl, '/commit/'), github.sha) }}
+              Commit link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
