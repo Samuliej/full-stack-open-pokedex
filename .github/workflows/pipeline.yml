@@ -58,3 +58,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+
+      - name: deployment and tag succeeded
+        uses: rjstone/discord-webhook-notify@v1
+        if: ${{ success() }}
+        with:
+          severity: info
+          details: A new version of pokedex was succesfully deployed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: deployment and tag failed
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+            severity: error
+            details: |
+              Deployment and tag failed by ${GITHUB_ACTOR}:
+              Commit message: ${{ toJson(github.event.commits.*.message) }}
+              Commit link: ${{ steps.construct_commit_links.outputs.commit_links }}
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+
+
